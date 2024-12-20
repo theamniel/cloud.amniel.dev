@@ -1,0 +1,35 @@
+networks:
+  cloud:
+
+services:
+  gateway:
+    env_file: .env
+    build:
+      context: .
+      args:
+        - APP=gateway
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+    expose:
+      - ${SERVER_PORT}
+    networks:
+      - cloud
+    depends_on:
+      - datastore
+      - multimedia
+
+  datastore:
+    build: 
+      context: .
+      args:
+        - APP=datastore
+    networks:
+      - cloud
+
+  multimedia:
+    build: 
+      context: .
+      args:
+        - APP=multimedia
+    networks:
+      - cloud

@@ -1,0 +1,14 @@
+syntax = "proto3";
+package video;
+option go_package = "cloud.amniel.dev/multimedia;protocols";
+
+message VideoFrameRequest {
+  bytes data = 1;
+  int32 frame = 2;
+  repeated string args = 3;
+}
+
+message ThumbnailRequest {
+  bytes data = 1;
+  repeated string args = 2;
+}

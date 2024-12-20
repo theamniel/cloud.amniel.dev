@@ -1,0 +1,25 @@
+syntax = "proto3";
+package banned;
+option go_package = "cloud.amniel.dev/datastore;protocols";
+
+message BanResponse {
+  oneof result {
+    Ban ban = 1;
+    string error = 2;
+  }
+}
+
+message Ban {
+  string IP = 1;
+  int64 created_at = 2;
+  bool active = 3;
+}
+
+message ListBan {
+  repeated Ban ban = 1;
+}
+
+message SearchBan {
+  string query = 1;
+  optional bool active = 2;
+}

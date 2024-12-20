@@ -1,0 +1,27 @@
+syntax = "proto3";
+package file;
+option go_package = "cloud.amniel.dev/datastore;protocols";
+
+message FileResponse {
+  oneof result {
+    File file = 1;
+    string error = 2;
+  }
+}
+
+message File {
+  string ID = 1;
+  string path = 2;
+  string type = 3;
+  string ip = 4;
+  int64 views = 5;
+  int64 created_at = 6;
+}
+
+message ListFile {
+  repeated File file = 1;
+}
+
+message SearchFile {
+  string ID = 1;
+}

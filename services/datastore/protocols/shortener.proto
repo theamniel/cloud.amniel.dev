@@ -1,0 +1,24 @@
+syntax = "proto3";
+package shortener;
+option go_package = "cloud.amniel.dev/datastore;protocols";
+
+message ShortResponse {
+  oneof result {
+    Short short = 1;
+    string error = 2;
+  }
+}
+
+message Short {
+  string ID = 1;
+  string URL = 2;
+  int64 created_at = 3;
+}
+
+message SearchShort {
+  string id = 1;
+}
+
+message ListShort {
+  repeated Short shorts = 1;
+}

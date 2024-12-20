@@ -1,0 +1,20 @@
+syntax = "proto3";
+package protocols;
+option go_package = "cloud.amniel.dev/multimedia;protocols";
+
+import "services/multimedia/protocols/video.proto";
+import "services/multimedia/protocols/image.proto";
+
+message MultimediaResponse {
+  bytes data = 1;
+  string error = 2;
+}
+
+service MultimediaService {
+  rpc VideoFrame(video.VideoFrameRequest) returns (MultimediaResponse);
+  rpc VideoThumbnail(video.ThumbnailRequest) returns (MultimediaResponse);
+
+  rpc ImageThumbnail(video.ThumbnailRequest) returns (MultimediaResponse);
+  rpc ImageSize(image.ImageSizeRequest) returns (MultimediaResponse);
+  rpc ImageResize(image.ImageResizeRequest) returns (MultimediaResponse);
+}

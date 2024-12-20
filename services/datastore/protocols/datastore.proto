@@ -1,0 +1,58 @@
+syntax = "proto3";
+package protocols;
+option go_package = "cloud.amniel.dev/datastore;protocols";
+
+import "services/datastore/protocols/banned.proto";
+import "services/datastore/protocols/file.proto";
+import "services/datastore/protocols/shortener.proto";
+import "services/datastore/protocols/traffic.proto";
+
+message EmptyQuery {}
+
+message Query {
+  string query = 1;
+}
+
+message InsertedResult {
+  oneof result {
+    string ID = 1;
+    string error = 2;
+  }
+}
+
+message UpdateResult {
+  int64 matched_count = 1;
+  int64 modified_count = 2;
+  int64 upserted_count = 3;
+}
+
+message DeleteResult {
+  int32 deleted_count = 1;
+}
+
+service DataService {
+  // File
+  rpc AddFile(file.File) returns (InsertedResult);
+  rpc GetFiles(EmptyQuery) returns (file.ListFile);
+  rpc GetFile(file.SearchFile) returns (file.FileResponse);
+  rpc DeleteFile(file.SearchFile) returns (DeleteResult);
+
+  // Bans
+  rpc AddBan(banned.Ban) returns (InsertedResult);
+  rpc GetBans(EmptyQuery) returns (banned.ListBan);
+  rpc GetBan(banned.SearchBan) returns (banned.BanResponse);
+  rpc DeleteBan(banned.SearchBan) returns (DeleteResult);
+
+  // shortener
+  rpc AddShort(shortener.Short) returns (InsertedResult);
+  rpc GetShort(shortener.SearchShort) returns (shortener.ShortResponse);
+  rpc GetShorts(EmptyQuery) returns (shortener.ListShort);
+  rpc DeleteShort(shortener.SearchShort) returns (DeleteResult);
+
+  // traffic
+  rpc AddTraffic(traffic.Traffic) returns (InsertedResult);
+  rpc GetTraffics(EmptyQuery) returns (traffic.ListTraffic);
+  rpc GetTraffic(Query) returns (traffic.ListTraffic);
+  rpc DeleteTraffic(Query) returns (DeleteResult);
+  rpc UpdateTraffic(traffic.UpdateTraffic) returns (UpdateResult);
+}
