@@ -25,8 +25,13 @@ func main() {
 	defer logger.Sync()
 	sugar := logger.Sugar()
 
+	k := koanf.New(".")
+	if err := k.Load(file.Provider("config.toml"), toml.Parser()); err != nil {
+		sugar.Fatalf("failed to load config: %v", err)
+	}
+
 	fx.New(
-		fx.Supply(sugar, koanf.New(".")),
+		fx.Supply(sugar, k),
 		fx.Provide(configureApp),
 		fx.Invoke(
 			middlewares.Configure,
@@ -39,10 +44,6 @@ func main() {
 func server(lc fx.Lifecycle, k *koanf.Koanf, logger *zap.SugaredLogger, app *fiber.App) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
-			if err := k.Load(file.Provider("config.toml"), toml.Parser()); err != nil {
-				return err
-			}
-
 			id := utils.RandomString(32)
 			hash := utils.Base64([]byte(id))
 			if err := k.Set("gateway.token", hash); err != nil {

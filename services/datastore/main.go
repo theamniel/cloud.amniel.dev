@@ -20,8 +20,13 @@ func main() {
 	defer logger.Sync()
 	sugar := logger.Sugar()
 
+	k := koanf.New(".")
+	if err := k.Load(file.Provider("config.toml"), toml.Parser()); err != nil {
+		sugar.Fatalf("error loading config: %v", err)
+	}
+
 	fx.New(
-		fx.Supply(sugar, koanf.New(".")),
+		fx.Supply(sugar, k),
 		fx.Provide(database.New),
 		fx.Invoke(server),
 	).Run()
@@ -31,10 +36,6 @@ func server(lc fx.Lifecycle, k *koanf.Koanf, logger *zap.SugaredLogger) {
 	srv := grpc.NewServer()
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
-			if err := k.Load(file.Provider("config.toml"), toml.Parser()); err != nil {
-				return err
-			}
-
 			list, err := net.Listen("tcp", fmt.Sprintf(":%d", k.Int("datastore.port")))
 			if err != nil {
 				return err
