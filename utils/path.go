@@ -7,17 +7,12 @@ import (
 )
 
 // GetPath returns the absolute path by joining the executable directory with the provided path.
-func GetPath(p string) (string, error) {
-	if p == "" {
+func GetPath(p ...string) (string, error) {
+	if len(p) == 0 {
 		return "", fmt.Errorf("empty path provided")
 	}
 
-	d, _, err := Executable()
-	if err != nil {
-		return "", fmt.Errorf("failed to get executable path: %w", err)
-	}
-
-	d = filepath.Join(d, p)
+	d := filepath.Join(p...)
 	return d, nil
 }
 

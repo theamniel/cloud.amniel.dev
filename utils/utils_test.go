@@ -41,10 +41,11 @@ func TestExecutable(t *testing.T) {
 
 // TestRandomString tests the RandomString function.
 func TestRandomString(t *testing.T) {
+	n := 32
 	t.Run("TestRandomString", func(t *testing.T) {
 		t.Parallel()
-		s := utils.RandomString(10)
-		if len(s) != 10 {
+		s := utils.RandomString(n)
+		if len(s) != n {
 			t.Errorf("TestRandomString failed: %v", s)
 		}
 	})

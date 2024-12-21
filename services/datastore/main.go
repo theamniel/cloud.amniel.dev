@@ -11,6 +11,8 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
+
+	"cloud.amniel.dev/services/datastore/services/database"
 )
 
 func main() {
@@ -20,6 +22,7 @@ func main() {
 
 	fx.New(
 		fx.Supply(sugar, koanf.New(".")),
+		fx.Provide(database.New),
 		fx.Invoke(server),
 	).Run()
 }
